@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/models.dart';
+import '../di/providers.dart';
 import 'screens.dart';
 
 class GroceryScreen extends StatelessWidget {
@@ -13,7 +13,7 @@ class GroceryScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Provider.of<GroceryManager>(context, listen: false).createNewItem();
+          context.read(groceryManagerProvider).createNewItem();
         },
       ),
       body: buildGroceryScreen(),
@@ -21,10 +21,12 @@ class GroceryScreen extends StatelessWidget {
   }
 
   Widget buildGroceryScreen() {
-    return Consumer<GroceryManager>(
-      builder: (context, manager, child) {
-        if (manager.groceryItems.isNotEmpty) {
-          return GroceryListScreen(manager: manager);
+    return Consumer(
+      builder: (context, watch, child) {
+        final groceryManager = watch(groceryManagerProvider);
+
+        if (groceryManager.groceryItems.isNotEmpty) {
+          return GroceryListScreen();
         } else {
           return const EmptyGroceryScreen();
         }

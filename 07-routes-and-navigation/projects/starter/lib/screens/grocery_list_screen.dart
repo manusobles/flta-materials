@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../components/grocery_tile.dart';
+import '../di/locator.dart';
 import '../models/models.dart';
 
 class GroceryListScreen extends StatelessWidget {
-  final GroceryManager manager;
+  final GroceryManager manager = locator.get<GroceryManager>();
 
-  const GroceryListScreen({
-    Key? key,
-    required this.manager,
-  }) : super(key: key);
+  GroceryListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

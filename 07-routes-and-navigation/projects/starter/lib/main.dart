@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'di/locator.dart';
+import 'di/providers.dart';
 import 'fooderlich_theme.dart';
-import 'models/models.dart';
 import 'navigation/app_router.dart';
 
 void main() async {
   await setupLocator();
   runApp(
-    const Fooderlich(),
+    const ProviderScope(
+      child: Fooderlich(),
+    ),
   );
 }
 
@@ -21,55 +23,30 @@ class Fooderlich extends StatefulWidget {
 }
 
 class _FooderlichState extends State<Fooderlich> {
-  final _groceryManager = locator.get<GroceryManager>();
-  final _profileManager = locator.get<ProfileManager>();
-  final _appStateManager = locator.get<AppStateManager>();
-
-  late AppRouter _appRouter;
-
-  @override
-  void initState() {
-    _appRouter = AppRouter(
-      appStateManager: _appStateManager,
-      groceryManager: _groceryManager,
-      profileManager: _profileManager,
-    );
-    super.initState();
-  }
+  final AppRouter _appRouter = locator.get<AppRouter>();
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => _groceryManager,
-        ),
-        ChangeNotifierProvider(
-          create: (context) => _profileManager,
-        ),
-        ChangeNotifierProvider(
-          create: (context) => _appStateManager,
-        ),
-      ],
-      child: Consumer<ProfileManager>(
-        builder: (context, profileManager, child) {
-          ThemeData theme;
-          if (profileManager.darkMode) {
-            theme = FooderlichTheme.dark();
-          } else {
-            theme = FooderlichTheme.light();
-          }
+    return Consumer(
+      builder: (context, watch, child) {
+        final profileManager = watch(profileManagerProvider);
 
-          return MaterialApp(
-            theme: theme,
-            title: 'Fooderlich',
-            home: Router(
-              routerDelegate: _appRouter,
-              backButtonDispatcher: RootBackButtonDispatcher(),
-            ),
-          );
-        },
-      ),
+        ThemeData theme;
+        if (profileManager.darkMode) {
+          theme = FooderlichTheme.dark();
+        } else {
+          theme = FooderlichTheme.light();
+        }
+
+        return MaterialApp(
+          theme: theme,
+          title: 'Fooderlich',
+          home: Router(
+            routerDelegate: _appRouter,
+            backButtonDispatcher: RootBackButtonDispatcher(),
+          ),
+        );
+      },
     );
   }
 }

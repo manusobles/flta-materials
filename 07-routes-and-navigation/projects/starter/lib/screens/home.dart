@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../di/providers.dart';
 import '../models/models.dart';
 import 'explore_screen.dart';
 import 'grocery_screen.dart';
@@ -37,42 +38,38 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppStateManager>(
-      builder: (context, appStateManager, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Fooderlich',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            actions: [
-              profileButton(),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Fooderlich',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        actions: [
+          profileButton(),
+        ],
+      ),
+      body: IndexedStack(index: widget.currentTab, children: pages),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Theme.of(context).textSelectionTheme.selectionColor,
+        currentIndex: widget.currentTab,
+        onTap: (index) {
+          context.read(appStateManagerProvider).goToTab(index);
+        },
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+            label: 'Explore',
           ),
-          body: IndexedStack(index: widget.currentTab, children: pages),
-          bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Theme.of(context).textSelectionTheme.selectionColor,
-            currentIndex: widget.currentTab,
-            onTap: (index) {
-              Provider.of<AppStateManager>(context, listen: false).goToTab(index);
-            },
-            items: <BottomNavigationBarItem>[
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.explore),
-                label: 'Explore',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.book),
-                label: 'Recipes',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.list),
-                label: 'To Buy',
-              ),
-            ],
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Recipes',
           ),
-        );
-      },
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'To Buy',
+          ),
+        ],
+      ),
     );
   }
 
@@ -87,7 +84,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         onTap: () {
-          Provider.of<ProfileManager>(context, listen: false).tapOnProfile(true);
+          context.read(profileManagerProvider).tapOnProfile(true);
         },
       ),
     );

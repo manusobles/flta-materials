@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/circle_image.dart';
+import '../di/providers.dart';
 import '../models/models.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
-            Provider.of<ProfileManager>(context, listen: false).tapOnProfile(false);
+            context.read(profileManagerProvider).tapOnProfile(false);
           },
         ),
       ),
@@ -58,14 +59,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ListTile(
           title: const Text('View raywenderlich.com'),
           onTap: () {
-            Provider.of<ProfileManager>(context, listen: false).tapOnRaywenderlich(true);
+            context.read(profileManagerProvider).tapOnRaywenderlich(true);
           },
         ),
         ListTile(
           title: const Text('Log out'),
           onTap: () {
-            Provider.of<ProfileManager>(context, listen: false).tapOnProfile(false);
-            Provider.of<AppStateManager>(context, listen: false).logout();
+            context.read(profileManagerProvider).tapOnProfile(false);
+            context.read(appStateManagerProvider).logout();
           },
         )
       ],
@@ -82,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Switch(
             value: widget.user.darkMode,
             onChanged: (value) {
-              Provider.of<ProfileManager>(context, listen: false).darkMode = value;
+              context.read(profileManagerProvider).darkMode = value;
             },
           )
         ],

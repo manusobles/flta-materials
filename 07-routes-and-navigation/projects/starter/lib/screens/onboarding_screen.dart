@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../di/providers.dart';
 import '../models/models.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         MaterialButton(
           child: const Text('Skip'),
           onPressed: () {
-            Provider.of<AppStateManager>(context, listen: false).completeOnboarding();
+            context.read(appStateManagerProvider).completeOnboarding();
           },
         ),
       ],
