@@ -17,6 +17,8 @@ dependencies:
   uuid: ^3.0.4
   smooth_page_indicator: ^1.0.0+2
   webview_flutter: ^2.0.13
+  # Service locator
+  get_it: ^7.1.3
 
 dev_dependencies:
   flutter_test:

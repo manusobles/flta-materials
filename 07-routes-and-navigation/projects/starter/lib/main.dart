@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'di/locator.dart';
 import 'fooderlich_theme.dart';
 import 'models/models.dart';
 import 'navigation/app_router.dart';
 
-void main() {
+void main() async {
+  await setupLocator();
   runApp(
     const Fooderlich(),
   );
@@ -19,9 +21,9 @@ class Fooderlich extends StatefulWidget {
 }
 
 class _FooderlichState extends State<Fooderlich> {
-  final _groceryManager = GroceryManager();
-  final _profileManager = ProfileManager();
-  final _appStateManager = AppStateManager();
+  final _groceryManager = locator.get<GroceryManager>();
+  final _profileManager = locator.get<ProfileManager>();
+  final _appStateManager = locator.get<AppStateManager>();
 
   late AppRouter _appRouter;
 
