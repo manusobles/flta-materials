@@ -39,25 +39,8 @@ class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDe
         if (appStateManager.isInitialized && !appStateManager.isLoggedIn) LoginScreen.page(),
         if (appStateManager.isLoggedIn && !appStateManager.isOnboardingComplete) OnboardingScreen.page(),
         if (appStateManager.isOnboardingComplete) Home.page(appStateManager.getSelectedTab),
-        if (groceryManager.isCreatingNewItem)
-          GroceryItemScreen.page(
-            onCreate: (item) {
-              groceryManager.addItem(item);
-            },
-            onUpdate: (item, index) {
-              // No update
-            },
-          ),
-        if (groceryManager.selectedIndex != -1)
-          GroceryItemScreen.page(
-              item: groceryManager.selectedGroceryItem,
-              index: groceryManager.selectedIndex,
-              onUpdate: (item, index) {
-                groceryManager.updateItem(item, index);
-              },
-              onCreate: (_) {
-                // No create
-              }),
+        if (groceryManager.isCreatingNewItem) GroceryItemScreen.page(),
+        if (groceryManager.selectedIndex != -1) GroceryItemScreen.page(),
         if (profileManager.didSelectUser) ProfileScreen.page(profileManager.getUser),
         if (profileManager.didTapOnRaywenderlich) WebViewScreen.page()
       ],
